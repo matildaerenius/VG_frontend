@@ -45,16 +45,23 @@
               <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
             </li>
           </ul>
-          <form class="d-flex">
-            <button class="btn btn-outline-dark" type="submit">
-              <i class="bi-cart-fill me-1"></i>
-              Cart
-              <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-            </button>
-          </form>
-        </div>
-      </div>
-    </nav>
+             <!-- CART-knapp som öppnar offcanvas -->
+             <button
+             class="btn btn-outline-dark"
+             type="button"
+             data-bs-toggle="offcanvas"
+             data-bs-target="#cartOffcanvas"
+             aria-controls="cartOffcanvas"
+           >
+             <i class="bi bi-cart-fill me-1"></i>
+             Cart
+             <!-- Badge för antal varor i varukorg -->
+             <span id="cartCount" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+           </button>
+         </div>
+       </div>
+     </nav>
+ 
     <!-- Header-->
     <header class="bg-dark py-5">
       <div class="container px-4 px-lg-5 my-5">
@@ -185,63 +192,26 @@
   
   
 
-    <!-- Order Product Modal -->
-<div class="modal fade" id="orderProductModal" tabindex="-1" aria-labelledby="orderProductModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="orderProductModalLabel">Beställ Produkt</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Stäng"></button>
-        </div>
-        <div class="modal-body">
-          <!-- Produktinformation -->
-          <div id="modalProductDetails" class="text-center mb-3">
-            <img src="" id="modalProductImage" alt="" class="img-fluid mb-2" style="max-height: 150px;">
-            <h4 id="modalProductTitle"></h4>
-            <p id="modalProductPrice"></p>
-            <p id="modalProductDescription" style="display: none;"></p>
-          </div>
-          <!-- Orderformulär -->
-          <form id="orderProductForm" novalidate>
-            <div class="mb-3">
-              <label for="orderName" class="form-label">Namn</label>
-              <input type="text" class="form-control" id="orderName" required>
-              <div class="invalid-feedback">Ange ett namn mellan 2 och 50 tecken.</div>
-            </div>
-            <div class="mb-3">
-              <label for="orderEmail" class="form-label">E-post</label>
-              <input type="email" class="form-control" id="orderEmail" required>
-              <div class="invalid-feedback">Ange en giltig e-post (max 50 tecken).</div>
-            </div>
-            <div class="mb-3">
-              <label for="orderPhone" class="form-label">Telefon</label>
-              <input type="text" class="form-control" id="orderPhone" required>
-              <div class="invalid-feedback">Ange ett giltigt telefonnummer (max 50 tecken).</div>
-            </div>
-            <div class="mb-3">
-              <label for="orderStreet" class="form-label">Gatuadress</label>
-              <input type="text" class="form-control" id="orderStreet" required>
-              <div class="invalid-feedback">Ange en gatuadress mellan 2 och 50 tecken.</div>
-            </div>
-            <div class="mb-3">
-                <label for="orderZipCode" class="form-label">Postnummer</label>
-                <input type="text" class="form-control" id="orderZipCode" required>
-                <div class="invalid-feedback">Måste vara exakt 5 siffror</div>
-              </div>
-              <div class="mb-3">
-                <label for="orderCity" class="form-label">Ort</label>
-                <input type="text" class="form-control" id="orderCity" required>
-                <div class="invalid-feedback">Ange en ort mellan 2 och 50 tecken.</div>
-              </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Avbryt</button>
-          <button type="button" class="btn btn-primary" id="submitOrderButton">Skicka beställning</button>
-        </div>
-      </div>
-    </div>
-  </div>
+     <!-- Varukorg -->
+     <div
+     class="offcanvas offcanvas-end"
+     tabindex="-1"
+     id="cartOffcanvas"
+     aria-labelledby="cartOffcanvasLabel"
+   >
+     <div class="offcanvas-header">
+       <h5 class="offcanvas-title" id="cartOffcanvasLabel">Your Cart</h5>
+       <button
+         type="button"
+         class="btn-close text-reset"
+         data-bs-dismiss="offcanvas"
+         aria-label="Close"
+       ></button>
+     </div>
+     <div class="offcanvas-body d-flex flex-column" id="cartItems">
+       
+     </div>
+   </div>
   
     <!-- Footer-->
     <footer class="py-3 bg-dark">

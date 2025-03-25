@@ -3,85 +3,212 @@
 * Copyright 2013-2023 Start Bootstrap
 * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-shop-homepage/blob/master/LICENSE)
 */
-// This file is intentionally blank
-// Use this file to add JavaScript to your project
+
+let cart = [];
 
 document.addEventListener("DOMContentLoaded", () => {
-    loadProducts();
-  })
+  loadProducts();
+});
+
+async function loadProducts() {
+  try {
+    console.log("Hämtar produkter från fakestore...");
+
+    // Hämtar produkter från API
+    const response = await fetch("https://fakestoreapi.com/products");
+    if (!response.ok) throw new Error(`API-fel: ${response.status}`);
+
+    const products = await response.json();
+
+    // Hitta container
+    const container = document.getElementById("products-container");
+    if (!container) throw new Error("Fel: Ingen container hittades!");
+
+    // Rensa container innan produkter läggs in 
+    container.innerHTML = "";
+
+    // Loopa igenom produkterna
+    products.forEach((product) => {
+      const col = document.createElement("div");
+      col.classList.add("col-auto");
+
+      
+      col.innerHTML = `
+        <div class="card product-card flip-card d-flex flex-column">
+          <div class="flip-card-inner flex-grow-1">
+            <div class="flip-card-front">
+              <img src="${product.image}" class="card-img-top" alt="${product.title}">
+              <h5 class="card-title">${product.title}</h5>
+              <p class="card-price">$${product.price}</p>
+            </div>
+            <div class="flip-card-back">
+              <h5 class="card-title">${product.title}</h5>
+              <p class="card-description">${product.description}</p>
+            </div>
+          </div>
+          <div class="p-2 mt-auto">
+            <button type="button" class="btn btn-primary w-100 add-to-cart-btn">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      `;
+
+      container.appendChild(col);
+
+      // Lägger till flip-funktion
+      const flipCard = col.querySelector(".flip-card");
+      flipCard.addEventListener("click", () => {
+        flipCard.classList.toggle("flipped");
+      });
+
+      // "Add to Cart"-knappen
+      const addToCartBtn = col.querySelector(".add-to-cart-btn");
+      addToCartBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        addToCart(product);
+      });
+    });
+  } catch (error) {
+    console.error("Fel vid hämtning av produkter:", error);
+    document.getElementById("products-container").innerHTML =
+      `<p class="text-danger">Kunde inte ladda produkter. Försök igen senare.</p>`;
+  }
+}
+
+// Lägg till en produkt i varukorgen
+function addToCart(product) {
+    const existingItem = cart.find((item) => item.id === product.id);
+    if (existingItem) {
+        existingItem.quantity++;
+      } else {
+        cart.push({
+          id: product.id,
+          title: product.title,
+          price: product.price,
+          image: product.image,
+          quantity: 1
+        });
+      }
+      updateCartUI();
+    }
+
+
+function updateCartUI() {
+  const cartItems = document.getElementById("cartItems");
+  const cartCount = document.getElementById("cartCount");
+
   
-  async function loadProducts() {
-    try {
-      console.log("Hämtar produkter från fakestore...");
+  cartItems.innerHTML = "";
+
   
-      // Hämtar produkter från API
-      const response = await fetch("https://fakestoreapi.com/products");
-      if (!response.ok) throw new Error(`API-fel: ${response.status}`);
+  if (cart.length === 0) {
+    cartItems.innerHTML = "<p>Your cart is empty.</p>";
+    cartCount.textContent = 0;
+    return;
+  }
+
+  // Räkna ut totalpris
+  let total = 0;
+  cart.forEach((item, index) => {
+    const itemSubtotal = item.price * item.quantity;  
+    total += itemSubtotal;
+
+    const itemDiv = document.createElement("div");
+    itemDiv.classList.add(
+      "d-flex",
+      "justify-content-between",
+      "align-items-center",
+      "mb-3"
+    );
+
+    itemDiv.innerHTML = `
+  <div class="d-flex align-items-center">
+    <img src="${item.image}" alt="${item.title}"
+         style="width: 50px; height: auto; margin-right: 10px; object-fit: contain;">
+    <div>
+      <h6 class="mb-1">${item.title}</h6>
+      <p class="mb-0">$${item.price.toFixed(2)} each</p>
+    </div>
+  </div>
+
+  <div class="d-flex align-items-center">
+    <div class="quantity-controls me-3">
+      <button class="quantity-btn minus-btn">-</button>
+      <span class="quantity-display">${item.quantity}</span>
+      <button class="quantity-btn plus-btn">+</button>
+    </div>
+    <span class="me-3">$${itemSubtotal.toFixed(2)}</span>
+    <button class="btn btn-sm btn-danger remove-item-btn">
+      <i class="bi bi-trash"></i>
+    </button>
+  </div>
+`;
   
-      const products = await response.json();
+// Minus-knapp
+itemDiv.querySelector(".minus-btn").addEventListener("click", () => {
+    decreaseQuantity(index);
+  });
   
-       // Hitta container
-       const container = document.getElementById("products-container");
-       if (!container) throw new Error("Fel: Ingen container hittades!");
+  // Plus-knapp
+  itemDiv.querySelector(".plus-btn").addEventListener("click", () => {
+    increaseQuantity(index);
+  });
   
-       // Rensa container innan produkter läggs in 
-       container.innerHTML = "";
+  // Papperskorgsikon
+  itemDiv.querySelector(".remove-item-btn").addEventListener("click", () => {
+    removeFromCart(index);
+  });
   
-       // Loopa igenom produkterna
-       products.forEach(product => {
-           const col = document.createElement("div");
-           col.classList.add("col-auto");
-           
-           col.innerHTML = `
-             <div class="card product-card flip-card d-flex flex-column">
-               <div class="flip-card-inner flex-grow-1">
-                 <div class="flip-card-front">
-                   <img src="${product.image}" class="card-img-top" alt="${product.title}">
-                   <h5 class="card-title">${product.title}</h5>
-                   <p class="card-price">$${product.price}</p>
-                 </div>
-                 <div class="flip-card-back">
-                   <h5 class="card-title">${product.title}</h5>
-                   <p class="card-description">${product.description}</p>
-                 </div>
-               </div>
-               <div class="p-2 mt-auto">
-                 <button type="button" class="btn btn-yellow order-button w-100" 
-                   data-bs-toggle="modal" 
-                   data-bs-target="#orderProductModal"
-                   data-product-id="${product.id}"
-                   data-product-title="${product.title}"
-                   data-product-price="${product.price}"
-                   data-product-image="${product.image}"
-                   data-product-description="${product.description}">
-                   Buy
-                 </button>
-               </div>
-             </div>
-           `;
-           
-           container.appendChild(col);
-         });
-         
-         
-  
-       // Lägger till flip-funktion
-       document.querySelectorAll('.flip-card').forEach(card => {
-           card.addEventListener('click', () => {
-               card.classList.toggle('flipped');
-           });
-       });
-  
-       
-  
-   } catch (error) {
-       console.error("Fel vid hämtning av produkter:", error);
-       document.getElementById("products-container").innerHTML = `<p class="text-danger">Kunde inte ladda produkter. Försök igen senare.</p>`;
-   }
+    // Ta bort enskild produkt
+    itemDiv.querySelector(".remove-item-btn").addEventListener("click", () => {
+      removeFromCart(index);
+    });
+
+    cartItems.appendChild(itemDiv);
+  });
+
+  function increaseQuantity(index) {
+    cart[index].quantity++;
+    updateCartUI();
   }
   
+  function decreaseQuantity(index) {
+    cart[index].quantity--;
+    if (cart[index].quantity <= 0) {
+      removeFromCart(index);
+    } else {
+      updateCartUI();
+    }
+  }
   
-  const orderProductModal = document.getElementById('orderProductModal');
+
+  const totalDiv = document.createElement("div");
+  totalDiv.classList.add("mt-auto");
+
+  totalDiv.innerHTML = `
+    <hr>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <strong>Total</strong>
+      <span>$${total.toFixed(2)}</span>
+    </div>
+    <button class="btn btn-primary w-100">Buy Now</button>
+  `;
+
+  cartItems.appendChild(totalDiv);
+
+  // Uppdatera antal artiklar
+  cartCount.textContent = cart.length;
+}
+
+// Ta bort en produkt från varukorgen baserat på index
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  updateCartUI();
+}
+
+  
+  /*const orderProductModal = document.getElementById('orderProductModal');
   orderProductModal.addEventListener('show.bs.modal', function (event) {
   const button = event.relatedTarget;
   const productTitle = button.getAttribute('data-product-title');
@@ -177,8 +304,6 @@ document.addEventListener("DOMContentLoaded", () => {
    window.location.href = "receipt.html";
   }
   });
-  
+  */
     
   
-  
-    
