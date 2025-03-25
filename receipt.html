@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt - MHFDR E-Creative</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        
+        .product-title {
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+        .product-description {
+          line-height: 1.5;
+          
+        }
+        .product-price {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #333; 
+        }
+      </style>
+</head>
+<body>
+    <div class="container py-5">
+        <h1 class="text-center">Thank You for Your Order!</h1>
+        <hr>
+        <div id="receiptContent" class="mt-4">
+          <!-- Kvitto datan fylls på med js -->
+        </div>
+        <div class="text-center mt-4">
+          <a href="index.html" class="btn btn-primary">Back to Shop</a>
+        </div>
+      </div>
+    
+      <!-- JS -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+      <script>
+        // Hämtar datan från sessionStorage
+        const receiptDataString = sessionStorage.getItem("receiptData");
+        if (receiptDataString) {
+          const receiptData = JSON.parse(receiptDataString);
+          
+          // Skapar innehållet
+          const receiptHTML = `
+        <h3>Product Details</h3>
+        <div class="row align-items-start mb-4">
+          <div class="col-md-3 text-center">
+            <img 
+              src="${receiptData.image}" 
+              alt="${receiptData.title}" 
+              class="img-fluid"
+              style="max-width: 200px;"
+            >
+          </div>
+          <div class="col-md-9">
+            <h4 class="product-title mb-3">${receiptData.title}</h4>
+            <p class="product-description">
+              ${receiptData.description}
+            </p>
+            <p class="product-price mt-3">${receiptData.price}</p>
+          </div>
+        </div>
+
+        <hr>
+        <h3>Your Details</h3>
+        <p><strong>Name:</strong> ${receiptData.orderName}</p>
+        <p><strong>Email:</strong> ${receiptData.orderEmail}</p>
+        <p><strong>Phone:</strong> ${receiptData.orderPhone}</p>
+        <p><strong>Street:</strong> ${receiptData.orderStreet}</p>
+        <p><strong>Zipcode:</strong> ${receiptData.orderZipCode}</p>
+        <p><strong>City:</strong> ${receiptData.orderCity}</p>
+      `;
+          
+          document.getElementById("receiptContent").innerHTML = receiptHTML;
+        } else {
+          // Om ingen data finns sparad....
+          document.getElementById("receiptContent").innerHTML = "<p>No order data found.</p>";
+        }
+      </script>
+</body>
+</html>
