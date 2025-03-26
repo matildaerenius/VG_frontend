@@ -181,7 +181,7 @@ itemRow.querySelector(".minus-btn").addEventListener("click", () => {
   });
 
   localStorage.setItem("cart", JSON.stringify(cart));
-
+  
 
   function increaseQuantity(index) {
     cart[index].quantity++;
@@ -207,7 +207,8 @@ itemRow.querySelector(".minus-btn").addEventListener("click", () => {
       <strong>Total</strong>
       <span>$${total.toFixed(2)}</span>
     </div>
-    <button class="btn btn-primary w-100">Buy Now</button>
+    <a href="order.html" class="btn btn-primary w-100">Buy Now</a>
+
   `;
 
   cartItems.appendChild(totalDiv);

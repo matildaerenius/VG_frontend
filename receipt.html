@@ -26,6 +26,13 @@
     <div class="container py-5">
         <h1 class="text-center">Thank You for Your Order!</h1>
         <hr>
+        <div id="receiptContent">
+            <h3>Order Details</h3>
+            <div id="orderDetails"></div>
+            <h3>Products</h3>
+            <div id="productsList"></div>
+          </div>
+          
         <div id="receiptContent" class="mt-4">
           <!-- Kvitto datan fylls på med js -->
         </div>
@@ -39,45 +46,40 @@
       <script>
         // Hämtar datan från sessionStorage
         const receiptDataString = sessionStorage.getItem("receiptData");
-        if (receiptDataString) {
-          const receiptData = JSON.parse(receiptDataString);
-          
-          // Skapar innehållet
-          const receiptHTML = `
-        <h3>Product Details</h3>
-        <div class="row align-items-start mb-4">
-          <div class="col-md-3 text-center">
-            <img 
-              src="${receiptData.image}" 
-              alt="${receiptData.title}" 
-              class="img-fluid"
-              style="max-width: 200px;"
-            >
-          </div>
-          <div class="col-md-9">
-            <h4 class="product-title mb-3">${receiptData.title}</h4>
-            <p class="product-description">
-              ${receiptData.description}
-            </p>
-            <p class="product-price mt-3">${receiptData.price}</p>
-          </div>
+if (receiptDataString) {
+  const receiptData = JSON.parse(receiptDataString);
+  
+  // Visa orderuppgifterna
+  document.getElementById("orderDetails").innerHTML = `
+    <p><strong>Name:</strong> ${receiptData.order.orderName}</p>
+    <p><strong>Email:</strong> ${receiptData.order.orderEmail}</p>
+    <p><strong>Phone:</strong> ${receiptData.order.orderPhone}</p>
+    <p><strong>Street:</strong> ${receiptData.order.orderStreet}</p>
+    <p><strong>Zip Code:</strong> ${receiptData.order.orderZipCode}</p>
+    <p><strong>City:</strong> ${receiptData.order.orderCity}</p>
+  `;
+  
+  // Visa produkterna i kvittot (du kan loopa igenom receiptData.products)
+  let productsHTML = "";
+  receiptData.products.forEach(product => {
+    productsHTML += `
+      <div class="product">
+        <img src="${product.image}" alt="${product.title}" style="width:60px;">
+        <div>
+          <h6>${product.title}</h6>
+          <p>Price: $${product.price.toFixed(2)} x ${product.quantity}</p>
+          <p>Subtotal: $${(product.price * product.quantity).toFixed(2)}</p>
         </div>
+      </div>
+      <hr>
+    `;
+  });
+  document.getElementById("productsList").innerHTML = productsHTML;
+  
+} else {
+  document.getElementById("receiptContent").innerHTML = "<p>No order data found.</p>";
+}
 
-        <hr>
-        <h3>Your Details</h3>
-        <p><strong>Name:</strong> ${receiptData.orderName}</p>
-        <p><strong>Email:</strong> ${receiptData.orderEmail}</p>
-        <p><strong>Phone:</strong> ${receiptData.orderPhone}</p>
-        <p><strong>Street:</strong> ${receiptData.orderStreet}</p>
-        <p><strong>Zipcode:</strong> ${receiptData.orderZipCode}</p>
-        <p><strong>City:</strong> ${receiptData.orderCity}</p>
-      `;
-          
-          document.getElementById("receiptContent").innerHTML = receiptHTML;
-        } else {
-          // Om ingen data finns sparad....
-          document.getElementById("receiptContent").innerHTML = "<p>No order data found.</p>";
-        }
       </script>
 </body>
 </html>
