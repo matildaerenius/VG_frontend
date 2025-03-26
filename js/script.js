@@ -7,7 +7,9 @@
 let cart = [];
 
 document.addEventListener("DOMContentLoaded", () => {
-  loadProducts();
+loadCartFromLocalStorage();
+updateCartUI();  
+loadProducts();
 });
 
 async function loadProducts() {
@@ -178,6 +180,9 @@ itemRow.querySelector(".minus-btn").addEventListener("click", () => {
     cartItems.appendChild(itemRow);
   });
 
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+
   function increaseQuantity(index) {
     cart[index].quantity++;
     updateCartUI();
@@ -208,7 +213,9 @@ itemRow.querySelector(".minus-btn").addEventListener("click", () => {
   cartItems.appendChild(totalDiv);
 
   // Uppdatera antal artiklar
-  cartCount.textContent = cart.length;
+  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+cartCount.textContent = totalItems;
+
 }
 
 // Ta bort en produkt från varukorgen baserat på index
@@ -216,6 +223,19 @@ function removeFromCart(index) {
   cart.splice(index, 1);
   updateCartUI();
 }
+
+function loadCartFromLocalStorage() {
+    const storedCart = localStorage.getItem("cart");
+    if (storedCart) {
+      cart = JSON.parse(storedCart);
+    }
+  }
+  
+  function clearCart() {
+    cart = [];               
+    updateCartUI();          
+  }
+  
 
   
   /*const orderProductModal = document.getElementById('orderProductModal');
