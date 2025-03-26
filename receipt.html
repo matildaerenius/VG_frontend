@@ -29,11 +29,13 @@
     <div class="container py-5">
         <h1 class="text-center">Thank You for Your Order!</h1>
         <hr>
-        <div id="receiptContent">
+        <div id="receiptContent" class="text-center">
             <h3>Order Details</h3>
-            <div id="orderDetails"></div>
+            <hr class="mx-auto" style="width: 200px; border-top: 3px solid #000000; opacity: 1;">
+            <div id="orderDetails" class="mb-5"></div>
             <h3>Products</h3>
-            <div id="productsList"></div>
+            <hr class="mx-auto" style="width: 200px; border-top: 3px solid #000000; opacity: 1;">
+            <div id="productsList" class="mb-5"></div>
         </div>
 
         <div id="receiptContent" class="mt-4">
@@ -77,6 +79,14 @@
       <hr>
     `;
             });
+
+            // Beräkna totalpriset
+            const total = receiptData.products.reduce((sum, product) => {
+                return sum + product.price * product.quantity;
+            }, 0);
+
+
+            productsHTML += `<h4 class="text-center">Total: $${total.toFixed(2)}</h4>`;
             document.getElementById("productsList").innerHTML = productsHTML;
 
         } else {
