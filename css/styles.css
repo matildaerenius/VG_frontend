@@ -10969,36 +10969,39 @@ a {
 
 /* === Varukorg === */
 .quantity-controls {
-    display: inline-flex;
-    align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    overflow: hidden;
-    background-color: #fff;
-    margin-right: 1rem; 
+    display: inline-flex;       
+    align-items: center;         
+    border: 1px solid #ccc;      
+    border-radius: 6px;         
+    overflow: hidden;          
+    background-color: #fff;   
+    min-width: 85px;  
   }
   
   .quantity-btn {
-    background: transparent;
-    border: none;
-    padding: 0.5rem 0.75rem;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    outline: none;
+    background: transparent;   
+    border: none;              
+    padding: 0.2rem 0.6rem;    
+    cursor: pointer;             
+    font-size: 0.875rem;           
+    font-weight: 600;            
+    outline: none;             
   }
   
   .quantity-btn:hover {
-    background-color: #f8f8f8;
+    background-color: #f8f8f8;   
   }
   
   .quantity-display {
-    padding: 0.5rem 0.75rem;
-    min-width: 1.5rem;
-    text-align: center;
+    padding: 0.2rem 0.6rem;
+    min-width: 1.5rem;          
+    text-align: center;          
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
-    font-size: 1rem;
+    font-size: 0.875rem;
+    
   }
+  
+  
   
   

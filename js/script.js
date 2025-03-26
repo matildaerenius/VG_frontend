@@ -103,69 +103,79 @@ function updateCartUI() {
 
   
   if (cart.length === 0) {
-    cartItems.innerHTML = "<p>Your cart is empty.</p>";
+    cartItems.innerHTML = "<p class='text-center'>Your cart is empty.</p>";
     cartCount.textContent = 0;
     return;
   }
 
   // Räkna ut totalpris
   let total = 0;
+
   cart.forEach((item, index) => {
     const itemSubtotal = item.price * item.quantity;  
     total += itemSubtotal;
 
-    const itemDiv = document.createElement("div");
-    itemDiv.classList.add(
-      "d-flex",
-      "justify-content-between",
-      "align-items-center",
-      "mb-3"
-    );
+    const itemRow = document.createElement("div");
+    
+    itemRow.classList.add("py-2");
 
-    itemDiv.innerHTML = `
-  <div class="d-flex align-items-center">
-    <img src="${item.image}" alt="${item.title}"
-         style="width: 50px; height: auto; margin-right: 10px; object-fit: contain;">
-    <div>
-      <h6 class="mb-1">${item.title}</h6>
-      <p class="mb-0">$${item.price.toFixed(2)} each</p>
+    itemRow.innerHTML = `
+      <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <img 
+          src="${item.image}" 
+          alt="${item.title}"
+          style="width: 60px; height: auto; object-fit: contain; margin-right: 10px;"
+        />
+        
+        <div>
+          <h6 class="mb-1">${item.title}</h6>
+          <p class="mb-1">$${item.price.toFixed(2)}</p>
+          
+          <div class="quantity-controls">
+            <button class="quantity-btn minus-btn">-</button>
+            <span class="quantity-display">${item.quantity}</span>
+            <button class="quantity-btn plus-btn">+</button>
+          </div>
+        </div>
+      </div>
+    <div class="text-end">
+      <button class="btn btn-sm btn-danger remove-item-btn">
+        <i class="bi bi-trash"></i>
+      </button>
+       <p class="mb-0 mt-2"> <strong>Sum:</strong> $${itemSubtotal.toFixed(2)}</p>
+      </div>
     </div>
-  </div>
+    `;
 
-  <div class="d-flex align-items-center">
-    <div class="quantity-controls me-3">
-      <button class="quantity-btn minus-btn">-</button>
-      <span class="quantity-display">${item.quantity}</span>
-      <button class="quantity-btn plus-btn">+</button>
-    </div>
-    <span class="me-3">$${itemSubtotal.toFixed(2)}</span>
-    <button class="btn btn-sm btn-danger remove-item-btn">
-      <i class="bi bi-trash"></i>
-    </button>
-  </div>
-`;
+    // Infoga itemRow i cartItems
+    cartItems.appendChild(itemRow);
+
+    // Lägg en linje under varje produkt
+    const separator = document.createElement("hr");
+    cartItems.appendChild(separator);
   
 // Minus-knapp
-itemDiv.querySelector(".minus-btn").addEventListener("click", () => {
+itemRow.querySelector(".minus-btn").addEventListener("click", () => {
     decreaseQuantity(index);
   });
   
   // Plus-knapp
-  itemDiv.querySelector(".plus-btn").addEventListener("click", () => {
+  itemRow.querySelector(".plus-btn").addEventListener("click", () => {
     increaseQuantity(index);
   });
   
   // Papperskorgsikon
-  itemDiv.querySelector(".remove-item-btn").addEventListener("click", () => {
+  itemRow.querySelector(".remove-item-btn").addEventListener("click", () => {
     removeFromCart(index);
   });
   
     // Ta bort enskild produkt
-    itemDiv.querySelector(".remove-item-btn").addEventListener("click", () => {
+    itemRow.querySelector(".remove-item-btn").addEventListener("click", () => {
       removeFromCart(index);
     });
 
-    cartItems.appendChild(itemDiv);
+    cartItems.appendChild(itemRow);
   });
 
   function increaseQuantity(index) {
