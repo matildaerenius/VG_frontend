@@ -167,11 +167,6 @@ function updateCartUI() {
             increaseQuantity(index);
         });
 
-        // Papperskorgsikon
-        itemRow.querySelector(".remove-item-btn").addEventListener("click", () => {
-            removeFromCart(index);
-        });
-
         // Ta bort enskild produkt
         itemRow.querySelector(".remove-item-btn").addEventListener("click", () => {
             removeFromCart(index);
